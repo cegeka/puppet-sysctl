@@ -21,6 +21,8 @@ define sysctl::conf($ensure='present', $value='') {
           fail("Sysctl::Conf[${key}]: parameter value must be defined")
         }
 
+        Augeas <| title == "sysctl.conf/${key}/rm" |>
+
         augeas { "sysctl.conf/${key}/add" :
           lens    => 'Sysctl.lns',
           incl    => '/etc/sysctl.conf',
