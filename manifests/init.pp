@@ -12,5 +12,10 @@
 #
 class sysctl {
 
+  exec { 'sysctl/reload':
+    path        => ['/sbin'],
+    command     => 'sysctl -p /etc/sysctl.conf',
+    refreshonly => true
+  }
 
 }
