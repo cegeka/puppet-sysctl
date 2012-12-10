@@ -39,8 +39,8 @@ define sysctl::conf($ensure='present', $value='') {
           changes => [
             "set ${key} '${value}'",
           ],
-          onlyif => "match ${key} size == 1",
-          notify => Exec['sysctl/reload']
+          onlyif  => "match ${key} size == 1",
+          notify  => Exec['sysctl/reload']
         }
       }
     default: { notice('The given ensure parameter is not supported') }
