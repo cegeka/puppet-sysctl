@@ -5,34 +5,66 @@ describe 'sysctl::conf' do
   context 'adding sysctl config parameter' do
     let(:title) { 'kernel.sem' }
 
-=begin
-    context 'without required value parameter' do
-    end
-=end
-
     context 'with an invalid ensure parameter' do
-    it {
-      expect {
-      }.to raise_error(Puppet::Error, /parameter ensure must be present or absent/)
-    }
+      let(:params) { { :ensure => 'stopped' }  }
+      it {
+        expect { subject
+        }.to raise_error(Puppet::Error, /parameter ensure must be present or absent/)
+      }
     end
 
-=begin
-    context 'with a valid value parameter' do
+    context 'without required value parameter' do
+      it {
+        expect { subject
+        }.to raise_error(Puppet::Error, /parameter value must be defined/)
+      }
     end
-=end
+
+    context 'with a valid value parameter' do
+      let(:params) { { :value => '10240 512000 64 9005' } }
+
+      it {
+        should contain_augeas('sysctl.conf/kernel.sem/add').with(
+          :context => "/files/etc/sysctl.conf",
+          :changes => [
+            "set kernel.sem '10240 512000 64 9005'",
+          ]
+        )
+      }
+
+      it {
+        should contain_exec('sysctl/reload')
+      }
+    end
   end
 
   context 'removing sysctl parameter' do
     let(:title) { 'kernel.sem' }
 
-=begin
     context 'with a value parameter' do
+      let(:params) { { :ensure => 'absent', :value => '10240 512000 64 9005' } }
+
+      it {
+        should contain_augeas('sysctl.conf/kernel.sem/rm').with(
+          :context => "/files/etc/sysctl.conf",
+          :changes => [
+            "rm kernel.sem",
+          ]
+        )
+      }
     end
 
     context 'without a value parameter' do
+      let(:params) { { :ensure => 'absent' } }
+
+      it { should contain_augeas('sysctl.conf/kernel.sem/rm').with(
+          :context => "/files/etc/sysctl.conf",
+          :changes => [
+            "rm kernel.sem",
+          ]
+        )
+      }
     end
-=end
   end
 
 end
