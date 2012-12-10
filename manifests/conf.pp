@@ -21,8 +21,6 @@ define sysctl::conf($ensure='present', $value='') {
           fail("Sysctl::Conf[${key}]: parameter value must be defined")
         }
 
-        Augeas <| title == "sysctl.conf/${key}/rm" |>
-
         augeas { "sysctl.conf/${key}/add" :
           lens    => 'Sysctl.lns',
           incl    => '/etc/sysctl.conf',
@@ -31,10 +29,19 @@ define sysctl::conf($ensure='present', $value='') {
             "set ${key} '${value}'",
           ],
           onlyif  => "match ${key} size == 0",
-          require => Augeas["sysctl.conf/${key}/rm"],
           notify  => Exec['sysctl/reload']
         }
 
+        augeas { "sysctl.conf/${key}/modify" :
+          lens    => 'Sysctl.lns',
+          incl    => '/etc/sysctl.conf',
+          context => '/files/etc/sysctl.conf',
+          changes => [
+            "set ${key} '${value}'",
+          ],
+          onlyif => "match ${key} size == 1",
+          notify => Exec['sysctl/reload']
+        }
       }
     default: { notice('The given ensure parameter is not supported') }
   }
