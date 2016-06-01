@@ -25,7 +25,7 @@ describe 'sysctl::conf' do
 
     describe file '/etc/sysctl.conf' do
       it { is_expected.to be_file }
-      its(:content) { should not contain /net.ipv4.tcp_syncookies/ }
+      its(:content) { should_not contain /net.ipv4.tcp_syncookies/ }
     end
 
   end
