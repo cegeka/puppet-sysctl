@@ -5,8 +5,11 @@ describe 'sysctl::conf' do
   describe 'running puppet code' do
     it 'should work with no errors' do
       pp = <<-EOS
-        sysctl::conf { 'net.ipv4.ip_local_port_range':
-          value => '9000 65535'
+        sysctl::conf { 'kernel.sem':
+          value => '250 32000 100 128'
+        }
+        sysctl::conf { 'net.ipv4.tcp_syncookies':
+          ensure => absent
         }
       EOS
 
@@ -17,7 +20,12 @@ describe 'sysctl::conf' do
 
     describe file '/etc/sysctl.conf' do
       it { is_expected.to be_file }
-      its(:content) { should contain /9000 65535/ }
+      its(:content) { should contain /kernel.sem/ }
+    end
+
+    describe file '/etc/sysctl.conf' do
+      it { is_expected.to be_file }
+      its(:content) { should not contain /net.ipv4.tcp_syncookies/ }
     end
 
   end
