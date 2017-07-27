@@ -1,6 +1,6 @@
 = puppet-sysctl module
 
-{<img src='https://codex.cegeka.be/jenkins/job/puppet-sysctl/badge/icon' />}[https://codex.cegeka.be/jenkins/job/puppet-sysctl/]
+{<img src='https://jenkins-iac.cegeka.be/job/puppet-sysctl/badge/icon' />}[https://jenkins-iac.cegeka.be/job/puppet-sysctl/]
 
 This is the sysctl module. Use this module to manage /etc/sysctl.conf.
 
